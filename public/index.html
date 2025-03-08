@@ -8,7 +8,9 @@
 <body>
     <h1>Ответьте на вопросы:</h1>
     <div id="questions"></div>
+
     <script>
+        // Загружаем вопросы
         fetch('/questions')
             .then(response => response.json())
             .then(questions => {
@@ -24,6 +26,7 @@
                 });
             });
 
+        // Функция для проверки ответа
         function checkAnswer(questionId) {
             const userAnswer = document.getElementById(`answer-${questionId}`).value;
             fetch('/check-answer', {
