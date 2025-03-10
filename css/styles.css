@@ -1,0 +1,122 @@
+/* Основные стили */
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+    font-family: 'Orbitron', sans-serif;
+    overflow: hidden;
+}
+
+/* Контейнер для отсчёта */
+#countdown {
+    text-align: center;
+    font-size: 4rem;
+    font-weight: bold;
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Рамка с размытыми границами */
+#countdown::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #00ffcc, #ff00cc, #00ffcc, #ff00cc);
+    background-size: 400% 400%;
+    z-index: -1;
+    animation: glow-border 8s ease infinite;
+    opacity: 0.3;
+    filter: blur(20px); /* Размытие границ */
+}
+
+/* Анимация для рамки */
+@keyframes glow-border {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Анимация для текста */
+@keyframes glow-text {
+    0% {
+        text-shadow: 0 0 5px rgba(0, 255, 204, 0.3), 0 0 10px rgba(0, 255, 204, 0.3), 0 0 15px rgba(0, 255, 204, 0.3);
+    }
+    50% {
+        text-shadow: 0 0 10px rgba(0, 255, 204, 0.5), 0 0 20px rgba(0, 255, 204, 0.5), 0 0 30px rgba(0, 255, 204, 0.5);
+    }
+    100% {
+        text-shadow: 0 0 5px rgba(0, 255, 204, 0.3), 0 0 10px rgba(0, 255, 204, 0.3), 0 0 15px rgba(0, 255, 204, 0.3);
+    }
+}
+
+#countdown span {
+    display: inline-block;
+    animation: glow-text 2s infinite ease-in-out;
+}
+
+/* Контейнер для загадок */
+#riddle-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#riddle-container.hidden {
+    display: none;
+}
+
+#riddle-input {
+    padding: 10px;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+#submit-answer {
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    margin-top: 10px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: #e0e0e0; /* Цвет по умолчанию */
+    transition: color 0.3s ease;
+}
+
+#submit-answer:hover {
+    color: #00ffcc; /* Цвет при наведении */
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 600px) {
+    #countdown {
+        font-size: 2.5rem;
+        padding: 15px;
+    }
+
+    #countdown::before {
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        filter: blur(10px); /* Меньше размытие для мобильных */
+    }
+}
+
+/* Подключение необычного шрифта */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
