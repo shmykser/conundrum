@@ -1,10 +1,10 @@
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
+const Database = require('better-sqlite3');
 const bodyParser = require('body-parser');
 const path = require('path');
 
 const app = express();
-const db = new sqlite3.Database(':memory:'); // Используем базу данных в памяти
+const db = new Database(':memory:'); // Используем базу данных в памяти
 
 // Настройки Telegram
 const chatId = "273065571";
@@ -17,24 +17,22 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../')));
 
 // Инициализация базы данных
-db.serialize(() => {
-    db.run(`
-        CREATE TABLE IF NOT EXISTS riddles (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            question TEXT,
-            answer TEXT
-        )
-    `);
+db.exec(`
+    CREATE TABLE IF NOT EXISTS riddles (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        question TEXT,
+        answer TEXT
+    )
+`);
 
-    // Добавляем загадки
-    db.run(`
-        INSERT INTO riddles (question, answer) VALUES
-        ('Enter the password to start the timer', 'password'),
-        ('What has keys but cant open locks?', 'keyboard'),
-        ('I speak without a mouth and hear without ears. What am I?', 'echo'),
-        ('The more you take, the more you leave behind. What am I?', 'footsteps')
-    `);
-});
+// Добавляем загадки
+db.exec(`
+    INSERT INTO riddles (question, answer) VALUES
+    ('Enter the password to start the timer', 'password'),
+    ('What has keys but cant open locks?', 'keyboard'),
+    ('I speak without a mouth and hear without ears. What am I?', 'echo'),
+    ('The more you take, the more you leave behind. What am I?', 'footsteps')
+`);
 
 // Функция для отправки сообщения в Telegram
 async function sendToTelegram(message) {
@@ -63,31 +61,25 @@ async function sendToTelegram(message) {
 
 // Получить все загадки
 app.get('/riddles', (req, res) => {
-    db.all("SELECT * FROM riddles", [], (err, rows) => {
-        if (err) {
-            res.status(500).json({ error: "Ошибка загрузки загадок" });
-        } else {
-            res.json(rows);
-        }
-    });
+    const rows = db.prepare("SELECT * FROM riddles").all();
+    res.json(rows);
 });
 
 // Проверить ответ
 app.post('/check-answer', (req, res) => {
     const { riddleId, userAnswer } = req.body;
 
-    db.get("SELECT * FROM riddles WHERE id = ?", [riddleId], (err, row) => {
-        if (err) {
-            res.status(500).json({ error: "Ошибка проверки ответа" });
-        } else {
-            const isCorrect = row.answer.toLowerCase() === userAnswer.toLowerCase();
+    const row = db.prepare("SELECT * FROM riddles WHERE id = ?").get(riddleId);
+    if (row) {
+        const isCorrect = row.answer.toLowerCase() === userAnswer.toLowerCase();
 
-            // Отправляем ответ в Telegram
-            sendToTelegram(`Введён ответ: ${userAnswer}`);
+        // Отправляем ответ в Telegram
+        sendToTelegram(`Введён ответ: ${userAnswer}`);
 
-            res.json({ isCorrect });
-        }
-    });
+        res.json({ isCorrect });
+    } else {
+        res.status(404).json({ error: "Загадка не найдена" });
+    }
 });
 
 // Запуск сервера
