@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>С Днем Рождения, Друг!</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Чтобы шарик не выходил за пределы экрана */
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            position: relative;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #ff6f61;
+        }
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px; /* Отступ снизу для текста */
+        }
+        .balloon {
+            width: 400px; /* Уменьшили размер шарика для мобильной версии */
+            height: auto; /* Высота будет автоматически подстраиваться */
+            position: absolute;
+            top: -400px; /* Шарик полностью скрыт за верхней границей экрана */
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: pointer; /* Курсор в виде руки */
+            transition: top 2s ease-in-out; /* Плавное перемещение шарика */
+            animation: float 3s ease-in-out infinite; /* Анимация плавания */
+        }
+        @keyframes float {
+            0%, 100% {
+                transform: translate(-50%, 0);
+            }
+            50% {
+                transform: translate(-50%, -20px);
+            }
+        }
+        .message-image {
+            width: 100%; /* Картинка занимает всю ширину контейнера */
+            max-width: 400px; /* Максимальная ширина картинки */
+            height: auto; /* Высота подстраивается автоматически */
+            border-radius: 10px; /* Скругленные углы */
+            margin-top: 20px; /* Отступ сверху */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="/img/balloon609.png" class="balloon" id="balloon" alt="Шарик">
+        <h1>С Днем Рождения!</h1>
+        <p>
+            Ты достойна всего о чем мечтаешь <br>
+            Живи свою лучшую жизнь <br>
+            Наслаждайся <br>
+            🎂🎁🎉
+        </p>
+        <!-- Добавляем картинку под текстом -->
+        <img src="/img/message.jpg" class="message-image" alt="Сообщение">
+    </div>
+
+    <script>
+        // Получаем элемент шарика
+        const balloon = document.getElementById('balloon');
+        let isInCenter = false; // Флаг для отслеживания положения шарика
+
+        // Функция для перемещения шарика
+        function moveBalloon() {
+            if (isInCenter) {
+                // Если шарик в центре, перемещаем его вверх
+                balloon.style.top = '-250px';
+            } else {
+                // Если шарик вверху, перемещаем его в центр
+                balloon.style.top = '50%';
+            }
+            isInCenter = !isInCenter; // Меняем флаг
+        }
+
+        // Обработчик клика на шарик
+        balloon.addEventListener('click', moveBalloon);
+    </script>
+</body>
+</html>
