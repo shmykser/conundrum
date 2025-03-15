@@ -13,10 +13,23 @@
         <span id="minutes">00</span>:
         <span id="seconds">00</span>
     </div>
-    <div id="riddle-container" class="hidden">
+
+    <!-- Контейнер для загадки -->
+    <div id="riddle-container"> <!-- Убрал класс hidden, чтобы поле отображалось сразу -->
         <p id="riddle-text"></p>
-        <input type="text" id="riddle-input" placeholder="Введите ответ">
+        <input type="text" id="riddle-input" placeholder="Введите пароль">
         <button id="submit-answer">🔒</button>
+    </div>
+
+    <!-- Контейнер для пин-кода -->
+    <div id="pin-container" class="hidden"> <!-- Оставил hidden, чтобы поле скрывалось изначально -->
+        <input type="text" id="pin-input" placeholder="Введите пин-код" maxlength="4">
+        <button id="submit-pin">🔒</button>
+        <p>Таймер заблокирован. Для разблокировки введите пин-код. Подробности на <a href="sharelock.html">сайте разработчика</a>.</p>
+    </div>
+    <div id="timer-message" class="hidden">
+        <p id="timer-text">Осталось недолго!</p>
+        <button id="reveal-code-button" class="hidden">Узнать код</button>
     </div>
     <script src="js/script.js"></script>
 </body>

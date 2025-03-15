@@ -85,21 +85,47 @@ body {
     padding: 10px;
     font-size: 1rem;
     margin-top: 10px;
+    border: 2px solid #e0e0e0;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
 }
 
-#submit-answer {
-    padding: 10px 20px;
-    font-size: 1.5rem;
+#riddle-input.input-error {
+    border-color: #ff0000 !important;
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Контейнер для пин-кода */
+#pin-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#pin-container.hidden {
+    display: none;
+}
+
+#pin-input {
+    padding: 10px;
+    font-size: 1rem;
     margin-top: 10px;
-    cursor: pointer;
-    background: none;
-    border: none;
-    color: #e0e0e0; /* Цвет по умолчанию */
-    transition: color 0.3s ease;
+    border: 2px solid #e0e0e0;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
 }
 
-#submit-answer:hover {
-    color: #00ffcc; /* Цвет при наведении */
+#pin-input.input-error {
+    border-color: #ff0000 !important;
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Анимация для ошибки */
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
 }
 
 /* Адаптация для мобильных устройств */
@@ -118,5 +144,41 @@ body {
     }
 }
 
+
+.hidden {
+    display: none;
+}
+
+#timer-message {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-top: 20px;
+    color: #ff0000; /* Красный цвет для акцента */
+}
+.hidden {
+    display: none;
+}
+
+#timer-message {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-top: 20px;
+    color: #ff0000; /* Красный цвет для акцента */
+}
+
+#reveal-code-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#reveal-code-button:hover {
+    background-color: #0056b3;
+}
 /* Подключение необычного шрифта */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');

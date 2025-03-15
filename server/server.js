@@ -2,16 +2,14 @@ const express = require('express');
 const Database = require('better-sqlite3');
 const bodyParser = require('body-parser');
 const path = require('path');
+const cors = require('cors');
 
 const app = express();
 const db = new Database(':memory:'); // Используем базу данных в памяти
 
-// Настройки Telegram
-const chatId = "273065571";
-const botToken = "819340168:AAEygB5s1K9A5E7tH2XiVCZAP50pOHMMaHw";
-
-// Middleware для обработки JSON
+// Middleware для обработки JSON и CORS
 app.use(bodyParser.json());
+app.use(cors());
 
 // Раздача статических файлов (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname, '../')));
@@ -28,54 +26,22 @@ db.exec(`
 // Добавляем загадки
 db.exec(`
     INSERT INTO riddles (question, answer) VALUES
-    ('Enter the password to start the timer', 'password'),
-    ('What has keys but cant open locks?', 'keyboard'),
-    ('I speak without a mouth and hear without ears. What am I?', 'echo'),
-    ('The more you take, the more you leave behind. What am I?', 'footsteps')
+    ('Enter the password to start the timer', 'пароль')
 `);
 
-// Функция для отправки сообщения в Telegram
-async function sendToTelegram(message) {
-    const { default: fetch } = await import('node-fetch'); // Динамический импорт
-    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-    const data = {
-        chat_id: chatId,
-        text: message
-    };
-
-    return fetch(url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(result => {
-        console.log("Сообщение отправлено в Telegram:", result);
-    })
-    .catch(error => {
-        console.error("Ошибка отправки сообщения в Telegram:", error);
-    });
-}
-
-// Получить все загадки
-app.get('/riddles', (req, res) => {
-    const rows = db.prepare("SELECT * FROM riddles").all();
-    res.json(rows);
-});
-
-// Проверить ответ
+// Маршрут для проверки ответа
 app.post('/check-answer', (req, res) => {
     const { riddleId, userAnswer } = req.body;
 
+    // Проверяем, что riddleId передан и является числом
+    if (!riddleId || isNaN(riddleId)) {
+        return res.status(400).json({ error: "Некорректный ID загадки" });
+    }
+
+    // Ищем загадку в базе данных
     const row = db.prepare("SELECT * FROM riddles WHERE id = ?").get(riddleId);
     if (row) {
         const isCorrect = row.answer.toLowerCase() === userAnswer.toLowerCase();
-
-        // Отправляем ответ в Telegram
-        sendToTelegram(`Введён ответ: ${userAnswer}`);
-
         res.json({ isCorrect });
     } else {
         res.status(404).json({ error: "Загадка не найдена" });
